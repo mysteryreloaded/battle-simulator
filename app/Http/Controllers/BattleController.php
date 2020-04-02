@@ -18,7 +18,7 @@ class BattleController extends Controller
     {
         Battle::create();
 
-        return Battle::orderBy('created_at', 'DESC')->get();
+        return $this->index();
     }
 
     public function show(Battle $battle)

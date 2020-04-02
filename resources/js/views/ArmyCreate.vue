@@ -8,6 +8,7 @@
         placeholder="Army Name"
       />
     </div>
+    <p v-if="!name" class="mt-4 ml-16 text-red-600">{{ error }}</p>
     <div class="flex mt-10 items-center">
       <h3 class="mr-6 font-semibold">Units:</h3>
       <input v-model="units" class="slider" type="range" min="80" max="100" value="100" />
@@ -35,7 +36,7 @@
       </div>
     </div>
 
-    <button @click="submit" class="bg-gray-800 btn-nav mt-8">Create Army</button>
+    <button @click="submit" class="bg-gray-800 btn-nav mt-8 focus:outline-none">Create Army</button>
   </div>
 </template>
 
@@ -47,7 +48,8 @@ export default {
     return {
       name: "",
       units: 80,
-      strategy: 0
+      strategy: 0,
+      error: "Army name is required!"
     };
   },
   methods: {
@@ -55,20 +57,22 @@ export default {
       this.strategy = strategy;
     },
     submit() {
-      let formData = {
-        name: this.name,
-        start_units: this.units,
-        alive_units: this.units,
-        strategy: this.strategy
-      };
+      if (this.name) {
+        let formData = {
+          name: this.name,
+          start_units: this.units,
+          alive_units: this.units,
+          strategy: this.strategy
+        };
 
-      BattleService.addArmy(this.$route.params.id, formData)
-        .then(data => {
-          this.$router.push("/battles/" + this.$route.params.id);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        BattleService.addArmy(this.$route.params.id, formData)
+          .then(data => {
+            this.$router.push("/battles/" + this.$route.params.id);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     }
   }
 };
